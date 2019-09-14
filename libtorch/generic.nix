@@ -1,7 +1,7 @@
 { stdenv, fetchzip, autoreconfHook, gettext
 , version, mkSrc
 , cudaSupport ? false, cudatoolkit ? null, cudnn ? null
-, mklSupport ? false , mkl ? null}:
+#, mklSupport ? false , mkl ? null}:
 
 let
   cudaVersion = builtins.splitVersion cudatoolkit.version;
@@ -10,14 +10,13 @@ let
   buildtype =
     let
       arch = if cudaSupport then "cu${cudaMajor}${cudaMinor}" else "cpu";
-      nightly = if version == "nightly" then "${version}/" else "";
     in
-      nightly + arch;
+      arch;
 in
 
 assert cudaSupport == false || (cudatoolkit != null && cudnn != null);
-assert mklSupport == false || mkl != null;
-assert version == "1.1" || version == "nightly";
+#assert mklSupport == false || mkl != null;
+assert version == "1.2"
 
 stdenv.mkDerivation rec {
   name = "libtorch-${version}";
@@ -27,7 +26,7 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = []
     ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ]
-    ++ stdenv.lib.optionals mklSupport [ mkl ];
+#    ++ stdenv.lib.optionals mklSupport [ mkl ];
 
   installPhase = ''
     ls $src
