@@ -1,5 +1,5 @@
 { stdenv, fetchzip, autoreconfHook, gettext
-, version, mkSrc
+, version ? "1.2", mkSrc
 , cudaSupport ? false, cudatoolkit ? null, cudnn ? null
 #, mklSupport ? false , mkl ? null}:
 
@@ -16,7 +16,7 @@ in
 
 assert cudaSupport == false || (cudatoolkit != null && cudnn != null);
 #assert mklSupport == false || mkl != null;
-assert version == "1.2"
+#assert version == "1.2"
 
 stdenv.mkDerivation rec {
   name = "libtorch-${version}";
