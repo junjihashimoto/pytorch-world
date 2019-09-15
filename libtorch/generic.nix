@@ -1,22 +1,8 @@
 { stdenv, fetchzip, autoreconfHook, gettext
-, version ? "1.2", mkSrc
-, cudaSupport ? false, cudatoolkit ? null, cudnn ? null
-#, mklSupport ? false , mkl ? null}:
-
-let
-  cudaVersion = builtins.splitVersion cudatoolkit.version;
-  cudaMajor = builtins.elemAt cudaVersion 0;
-  cudaMinor = builtins.elemAt cudaVersion 1;
-  buildtype =
-    let
-      arch = if cudaSupport then "cu${cudaMajor}${cudaMinor}" else "cpu";
-    in
-      arch;
-in
-
-assert cudaSupport == false || (cudatoolkit != null && cudnn != null);
-#assert mklSupport == false || mkl != null;
-#assert version == "1.2"
+, version ? "1.2", mkSrc, buildtype
+#, cudaSupport ? false, cudatoolkit ? null, cudnn ? null
+#, mklSupport ? false , mkl ? null
+}:
 
 stdenv.mkDerivation rec {
   name = "libtorch-${version}";
@@ -24,8 +10,8 @@ stdenv.mkDerivation rec {
 
   src = mkSrc buildtype;
 
-  propagatedBuildInputs = []
-    ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ]
+  propagatedBuildInputs = [];
+#    ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ];
 #    ++ stdenv.lib.optionals mklSupport [ mkl ];
 
   installPhase = ''
@@ -47,6 +33,6 @@ stdenv.mkDerivation rec {
     description = "libtorch";
     homepage = https://pytorch.org/;
     license = licenses.bsd3;
-    platforms = with platforms; linux ++ stdenv.lib.optionals (!cudaSupport) darwin;
+    platforms = with platforms; linux ++ darwin;
   };
 }
