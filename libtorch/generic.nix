@@ -21,8 +21,8 @@ stdenv.mkDerivation rec {
     cp -r {$src,$out}/lib/
     cp -r {$src,$out}/share/
   '' + stdenv.lib.optionalString stdenv.isDarwin ''
-    install_name_tool -id @rapth/lib/libtorch.dylib $out/lib/libtorch.dylib
-    install_name_tool -id @rapth/lib/libc10.dylib $out/lib/libc10.dylib
+    install_name_tool -id @rapth/libtorch.dylib $out/lib/libtorch.dylib
+    install_name_tool -id @rapth/libc10.dylib $out/lib/libc10.dylib
   '';
 
   # postInstall = ''
