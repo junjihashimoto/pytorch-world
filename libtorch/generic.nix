@@ -13,15 +13,26 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [];
 #    ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ];
 #    ++ stdenv.lib.optionals mklSupport [ mkl ];
-
-  installPhase = ''
-    ls $src
-    mkdir $out
-    cp -r {$src,$out}/bin/
-    cp -r {$src,$out}/include/
-    cp -r {$src,$out}/lib/
-    cp -r {$src,$out}/share/
-  '';
+  installPhase = if stdenv.isDarwin
+    then ''
+      ls $src
+      mkdir $out
+      cp -r {$src,$out}/bin/
+      cp -r {$src,$out}/include/
+      cp -r {$src,$out}/lib/
+      cp -r {$src,$out}/share/
+      for file in $out/lib/*; do
+        install_name_tool -id $file `basename $file`
+      done
+    ''
+	  else ''
+      ls $src
+      mkdir $out
+      cp -r {$src,$out}/bin/
+      cp -r {$src,$out}/include/
+      cp -r {$src,$out}/lib/
+      cp -r {$src,$out}/share/
+	  '';
 
   # postInstall = ''
   #   # Make boost header paths relative so that they are not runtime dependencies
