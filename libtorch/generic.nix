@@ -22,7 +22,7 @@ stdenv.mkDerivation rec {
       cp -r {$src,$out}/lib/
       cp -r {$src,$out}/share/
       for file in $out/lib/*.dylib; do
-        install_name_tool -id "@rapth/"`basename $file` lib/`basename $file`
+        install_name_tool -id @rapth/`basename $file` $file
       done
     ''
     else ''
