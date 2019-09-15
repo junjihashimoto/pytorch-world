@@ -13,9 +13,6 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [];
 #    ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ];
 #    ++ stdenv.lib.optionals mklSupport [ mkl ];
-  postFixup = stdenv.lib.optionalString stdenv.isDarwin ''
-    install_name_tool -id @rapth/lib/libtorch.dylib $out/lib/libtorch.dylib
-    install_name_tool -id @rapth/lib/libc10.dylib $out/lib/libc10.dylib
   ''
   installPhase = ''
     ls $src
@@ -24,6 +21,9 @@ stdenv.mkDerivation rec {
     cp -r {$src,$out}/include/
     cp -r {$src,$out}/lib/
     cp -r {$src,$out}/share/
+  '' + stdenv.lib.optionalString stdenv.isDarwin ''
+    install_name_tool -id @rapth/lib/libtorch.dylib $out/lib/libtorch.dylib
+    install_name_tool -id @rapth/lib/libc10.dylib $out/lib/libc10.dylib
   ''
 
   # postInstall = ''
