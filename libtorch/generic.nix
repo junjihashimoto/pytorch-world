@@ -13,26 +13,18 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [];
 #    ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ];
 #    ++ stdenv.lib.optionals mklSupport [ mkl ];
-  installPhase = if stdenv.isDarwin
-    then ''
-      ls $src
-      mkdir $out
-      cp -r {$src,$out}/bin/
-      cp -r {$src,$out}/include/
-      cp -r {$src,$out}/lib/
-      cp -r {$src,$out}/share/
-      for file in $out/lib/*.dylib; do
-        install_name_tool -id @rapth/`basename $file` $file
-      done
-    ''
-    else ''
-      ls $src
-      mkdir $out
-      cp -r {$src,$out}/bin/
-      cp -r {$src,$out}/include/
-      cp -r {$src,$out}/lib/
-      cp -r {$src,$out}/share/
-    '';
+  postFixup = stdenv.lib.optionalString stdenv.isDarwin ''
+    install_name_tool -id @rapth/lib/libtorch.dylib $out/lib/libtorch.dylib
+    install_name_tool -id @rapth/lib/libc10.dylib $out/lib/libc10.dylib
+  ''
+  installPhase = ''
+    ls $src
+    mkdir $out
+    cp -r {$src,$out}/bin/
+    cp -r {$src,$out}/include/
+    cp -r {$src,$out}/lib/
+    cp -r {$src,$out}/share/
+  ''
 
   # postInstall = ''
   #   # Make boost header paths relative so that they are not runtime dependencies
