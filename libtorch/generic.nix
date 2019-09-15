@@ -13,7 +13,6 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [];
 #    ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ];
 #    ++ stdenv.lib.optionals mklSupport [ mkl ];
-  ''
   installPhase = ''
     ls $src
     mkdir $out
@@ -24,7 +23,7 @@ stdenv.mkDerivation rec {
   '' + stdenv.lib.optionalString stdenv.isDarwin ''
     install_name_tool -id @rapth/lib/libtorch.dylib $out/lib/libtorch.dylib
     install_name_tool -id @rapth/lib/libc10.dylib $out/lib/libc10.dylib
-  ''
+  '';
 
   # postInstall = ''
   #   # Make boost header paths relative so that they are not runtime dependencies
