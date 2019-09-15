@@ -21,18 +21,18 @@ stdenv.mkDerivation rec {
       cp -r {$src,$out}/include/
       cp -r {$src,$out}/lib/
       cp -r {$src,$out}/share/
-      for file in $out/lib/*; do
-        install_name_tool -id $file `basename $file`
+      for file in $out/lib/*.dylib; do
+        install_name_tool -id "@rapth/"`basename $file` lib/`basename $file`
       done
     ''
-	  else ''
+    else ''
       ls $src
       mkdir $out
       cp -r {$src,$out}/bin/
       cp -r {$src,$out}/include/
       cp -r {$src,$out}/lib/
       cp -r {$src,$out}/share/
-	  '';
+    '';
 
   # postInstall = ''
   #   # Make boost header paths relative so that they are not runtime dependencies
