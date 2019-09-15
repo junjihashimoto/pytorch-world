@@ -22,7 +22,7 @@ stdenv.mkDerivation rec {
     cp -r {$src,$out}/share/
   '' + stdenv.lib.optionalString stdenv.isDarwin ''
     for f in $(ls $out/lib/*.dylib); do
-        install_name_tool -id $dev/lib/$(basename $f) $f || true
+        install_name_tool -id $out/lib/$(basename $f) $f || true
     done
     install_name_tool -change @rpath/libshm.dylib $out/lib/libshm.dylib $out/lib/libtorch_python.dylib
     install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libtorch_python.dylib
