@@ -1,7 +1,8 @@
 { stdenv, fetchzip, autoreconfHook, gettext
 , version ? "1.2", mkSrc, buildtype
 #, cudaSupport ? false, cudatoolkit ? null, cudnn ? null
-#, mklSupport ? false , mkl ? null
+#, mklSupport ? false
+, mkl ? null
 }:
 
 stdenv.mkDerivation rec {
@@ -10,7 +11,10 @@ stdenv.mkDerivation rec {
 
   src = mkSrc buildtype;
 
-  propagatedBuildInputs = [];
+  propagatedBuildInputs =
+    if stdenv.isDarwin then [ mkl ]
+    else [];
+
 #    ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ];
 #    ++ stdenv.lib.optionals mklSupport [ mkl ];
   installPhase = ''
@@ -21,21 +25,21 @@ stdenv.mkDerivation rec {
     cp -r {$src,$out}/lib/
     cp -r {$src,$out}/share/
   '' + stdenv.lib.optionalString stdenv.isDarwin ''
-    for f in $(ls $out/lib/*.dylib); do
-        install_name_tool -id @rpath/$(basename $f) $(basename $f) || true
-    done
-    install_name_tool -change @rpath/libshm.dylib $out/lib/libshm.dylib $out/lib/libtorch_python.dylib
-    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libtorch_python.dylib
-    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libtorch_python.dylib
-    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libtorch.dylib
-    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libcaffe2_observers.dylib
-    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libcaffe2_observers.dylib
-    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libcaffe2_module_test_dynamic.dylib
-    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libcaffe2_module_test_dynamic.dylib
-    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libcaffe2_detectron_ops.dylib
-    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libcaffe2_detectron_ops.dylib
-    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libshm.dylib
-    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libshm.dylib
+#    for f in $(ls $out/lib/*.dylib); do
+#        install_name_tool -id @rpath/$(basename $f) $(basename $f) || true
+#    done
+#    install_name_tool -change @rpath/libshm.dylib $out/lib/libshm.dylib $out/lib/libtorch_python.dylib
+#    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libtorch_python.dylib
+#    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libtorch_python.dylib
+#    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libtorch.dylib
+#    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libcaffe2_observers.dylib
+#    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libcaffe2_observers.dylib
+#    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libcaffe2_module_test_dynamic.dylib
+#    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libcaffe2_module_test_dynamic.dylib
+#    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libcaffe2_detectron_ops.dylib
+#    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libcaffe2_detectron_ops.dylib
+#    install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libshm.dylib
+#    install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libshm.dylib
   '';
 
   # postInstall = ''
