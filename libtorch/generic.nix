@@ -17,14 +17,7 @@ stdenv.mkDerivation rec {
 
 #    ++ stdenv.lib.optionals cudaSupport [ cudatoolkit cudnn ];
 #    ++ stdenv.lib.optionals mklSupport [ mkl ];
-  installPhase = ''
-    ls $src
-    mkdir $out
-    cp -r {$src,$out}/bin/
-    cp -r {$src,$out}/include/
-    cp -r {$src,$out}/lib/
-    cp -r {$src,$out}/share/
-  '' + stdenv.lib.optionalString stdenv.isDarwin ''
+  preFixup = stdenv.lib.optionalString stdenv.isDarwin ''
     install_name_tool -change @rpath/libshm.dylib $out/lib/libshm.dylib $out/lib/libtorch_python.dylib
     install_name_tool -change @rpath/libtorch.dylib $out/lib/libtorch.dylib $out/lib/libtorch_python.dylib
     install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libtorch_python.dylib
@@ -39,6 +32,14 @@ stdenv.mkDerivation rec {
     install_name_tool -change @rpath/libc10.dylib $out/lib/libc10.dylib $out/lib/libshm.dylib
     install_name_tool -change @rpath/libmklml.dylib $mkl/lib/libmklml.dylib $out/lib/libtorch.dylib
     install_name_tool -change @rpath/libiomp5.dylib $mkl/lib/libiomp5.dylib $out/lib/libtorch.dylib
+  '';
+  installPhase = ''
+    ls $src
+    mkdir $out
+    cp -r {$src,$out}/bin/
+    cp -r {$src,$out}/include/
+    cp -r {$src,$out}/lib/
+    cp -r {$src,$out}/share/
   '';
 
   # postInstall = ''
