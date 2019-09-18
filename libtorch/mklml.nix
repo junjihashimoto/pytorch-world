@@ -3,7 +3,7 @@
 
 stdenv.mkDerivation rec {
   name = "libmklml";
-  version = "0.17.2"
+  version = "0.17.2";
   src =
     if stdenv.hostPlatform.system == "x86_64-linux" then
       fetchzip {
