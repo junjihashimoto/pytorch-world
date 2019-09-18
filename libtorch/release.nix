@@ -35,7 +35,7 @@ in
         }
       else throw "missing url for platform ${stdenv.hostPlatform.system}";
   };
-  libtorch_cudatoolkit_10_0 = callGpu {
+  ${if stdenv.hostPlatform.system == "x86_64-darwin" then null else libtorch_cudatoolkit_10_0} = callGpu {
     version = "1.2";
     buildtype = "cu100";
     mkSrc = buildtype:
@@ -48,7 +48,7 @@ in
 #    cudatoolkit = cudatoolkit_10_0;
 #    cudnn = cudnn_cudatoolkit_10_0;
   };
-  libtorch_cudatoolkit_9_2 = callGpu {
+  ${if stdenv.hostPlatform.system == "x86_64-darwin" then null else libtorch_cudatoolkit_9_2} = callGpu {
     version = "1.2";
     buildtype = "cu92";
     mkSrc = buildtype:
