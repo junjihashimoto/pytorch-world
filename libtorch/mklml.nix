@@ -1,10 +1,9 @@
-{ stdenv, fetchzip
+{ stdenv, fetchzip, version
 }:
 
 stdenv.mkDerivation rec {
-  #name = "libmklml";
-  pname = "libmklml";
-  version = "0.17.2";
+  name = "libmklml";
+  inherit version;
   src =
     if stdenv.hostPlatform.system == "x86_64-linux" then
       fetchzip {
@@ -38,8 +37,8 @@ stdenv.mkDerivation rec {
 
   meta = with stdenv.lib; {
     description = "libmklml";
-    homepage = https://software.intel.com/en-us/mkl
-    license = { free = false; fullName = "Intel Simplified Software License"; shortName = "issl"; url = "https://software.intel.com/en-us/license/intel-simplified-software-license"; }
+    homepage = https://software.intel.com/en-us/mkl;
+    license = { free = false; fullName = "Intel Simplified Software License"; shortName = "issl"; url = "https://software.intel.com/en-us/license/intel-simplified-software-license"; };
     platforms = with platforms; linux ++ darwin;
   };
 }
