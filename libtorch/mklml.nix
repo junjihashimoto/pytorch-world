@@ -2,7 +2,8 @@
 }:
 
 stdenv.mkDerivation rec {
-  name = "libmklml";
+  #name = "libmklml";
+  pname = "libmklml";
   version = "0.17.2";
   src =
     if stdenv.hostPlatform.system == "x86_64-linux" then
