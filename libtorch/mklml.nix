@@ -1,9 +1,9 @@
-{ stdenv, fetchzip, version
+{ stdenv, fetchzip
 }:
 
 stdenv.mkDerivation rec {
   name = "libmklml";
-  inherit version;
+  version = "0.17.2";
   src =
     if stdenv.hostPlatform.system == "x86_64-linux" then
       fetchzip {

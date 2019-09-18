@@ -8,19 +8,17 @@ let
   callCpu = opts: callPackage ./generic.nix ({
 #    mklSupport = true;
 #    buildtype = "cpu";
-     mkl = libmklml;
+    mkl = libmklml {};
   } // opts);
   callGpu = opts: callPackage ./generic.nix ({
 #    mklSupport = true;
 #    cudaSupport = true;
 #    buildtype = "cu100";
-     mkl = libmklml;
+    mkl = libmklml {};
   } // opts);
 in
 {
-  libmklml = libmklml {
-    version = "0.17.2";
-  };
+  libmklml = libmklml {};
   libtorch_cpu = callCpu {
     version = "1.2";
     buildtype = "cpu";
