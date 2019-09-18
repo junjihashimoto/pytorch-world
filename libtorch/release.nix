@@ -18,6 +18,7 @@ let
   } // opts);
 in
 {
+  inherit libmklml;
   libtorch_cpu = callCpu {
     version = "1.2";
     buildtype = "cpu";
