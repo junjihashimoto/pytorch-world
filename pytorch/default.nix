@@ -27,7 +27,7 @@ let
     paths = [ cudatoolkit.out cudatoolkit.lib nccl.dev nccl.out ];
   };
   my_magma = magma.override { cudatoolkit = cudatoolkit; inherit mklSupport mkl; };
-  my_numpy = if mklSupport && numpy.blasImplementation != "mkl" then numpy.override { blas = mkl; } else numpy;
+  my_numpy = if mklSupport && numpy.blasImplementation != "mkl" then numpy.override { blas = mkl; isPyPy = true; } else numpy.override { isPyPy = true; } ;
   my_openmpi = if openMPISupport then openmpi.override { inherit cudaSupport cudatoolkit; } else openmpi;
 
   # Give an explicit list of supported architectures for the build, See:
